@@ -3,13 +3,16 @@ from turtle import Turtle
 class Snake:
     def __init__(self):
         self.snake = []
+        self.create_snake()
+        self.head = self.snake[0]
+
+    def create_snake(self):
         for i in range(3):
             snake_head = Turtle("square")
             snake_head.penup()
             snake_head.color("white")
             snake_head.goto(0 - i * 20, 0)
             self.snake.append(snake_head)
-        self.head = self.snake[0]
 
     def extend(self):
         tail = Turtle("square")
@@ -40,3 +43,10 @@ class Snake:
     def right(self):
         if self.head.heading() != 180:
             self.head.setheading(0)
+
+    def snake_reset(self):
+        for seg in self.snake:
+            seg.goto(1000, 1000)
+        self.snake.clear()
+        self.create_snake()
+        self.head = self.snake[0]

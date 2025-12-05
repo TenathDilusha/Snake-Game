@@ -13,41 +13,45 @@ my_screen.tracer(0)
 snake = Snake()
 snake_food = Food()
 my_score = Scoreboard()
-game_on = True
-while game_on:
-    my_screen.update()
-    time.sleep(0.1)
-    snake.move()
 
-    my_screen.listen()
-    my_screen.onkey(snake.up, "Up")
-    my_screen.onkey(snake.down, "Down")
-    my_screen.onkey(snake.left, "Left")
-    my_screen.onkey(snake.right, "Right")
+def game():
+    game_on = True
+    while game_on:
+        my_screen.update()
+        time.sleep(0.1)
+        snake.move()
 
-    for seg in snake.snake:
-        if seg == snake.head:
-            pass
-        elif snake.head.distance(seg) < 10 :
+        my_screen.listen()
+        my_screen.onkey(snake.up, "Up")
+        my_screen.onkey(snake.down, "Down")
+        my_screen.onkey(snake.left, "Left")
+        my_screen.onkey(snake.right, "Right")
+
+        for seg in snake.snake:
+            if seg == snake.head:
+                pass
+            elif snake.head.distance(seg) < 10 :
+                game_on = False
+
+        if snake.head.distance(snake_food) < 20:
+            snake_food.refresh()
+            snake.extend()
+            my_score.update_score()
+            my_score.clear()
+            my_score.write_score()
+
+        if snake.head.xcor() < -280 or snake.head.xcor() > 280 or snake.head.ycor() < -280 or snake.head.ycor() > 280:
             game_on = False
 
-    if snake.head.distance(snake_food) < 20:
-        snake_food.refresh()
-        snake.extend()
-        my_score.update_score()
-        my_score.clear()
-        my_score.write_score()
-
-    if snake.head.xcor() < -280 or snake.head.xcor() > 280 or snake.head.ycor() < -280 or snake.head.xcor() > 280:
-        game_on = False
-
-my_score.game_over()
+def run_again():
+    my_score.game_restart()
+    game()
+    my_score.game_over()
+    snake.snake_reset()
 
 
-
-
-
-
-
+run_again()
+my_screen.listen()
+my_screen.onkey(run_again, "space")
 
 my_screen.exitonclick()
